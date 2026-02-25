@@ -1,33 +1,61 @@
-import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
-
-import Account from "./pages/Account";
+import { Link, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Location from "./pages/Location";
-import Settings from "./pages/Settings";
 
 function App() {
 
   return (
-    <BrowserRouter>
+    <div className="nav-links" style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
 
-      <nav style={{ padding: "10px", background: "#ddd" }}>
-        <Link to="/">Home</Link> |{" "}
-        <Link to="/location">Location</Link> |{" "}
-        <Link to="/account">Account</Link> |{" "}
-        <Link to="/settings">Settings</Link>
+      <nav style={styles.nav}>
+
+        <h2>Weather App</h2>
+
+        <div>
+          <Link to="/" style={styles.link}>Home</Link>
+          <Link to="/location" style={styles.link}>Change Location</Link>
+        </div>
+
       </nav>
 
       <Routes>
 
-        <Route path="/" element={<Home />} />
-        <Route path="/location" element={<Location />} />
-        <Route path="/account" element={<Account />} />
-        <Route path="/settings" element={<Settings />} />
+        <Route
+          path="/"
+          element={<Home />}
+        />
+
+        <Route
+          path="/location"
+          element={<Location />}
+        />
 
       </Routes>
 
-    </BrowserRouter>
+    </div>
   );
 }
+
+const styles = {
+
+  nav: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "15px 25px",
+    background: "#0f172a",
+    color: "white",
+    width: "100%",
+    boxSizing: "border-box"
+  },
+
+  link: {
+    color: "white",
+    marginLeft: "15px",
+    textDecoration: "none",
+    fontWeight: "bold"
+  }
+
+};
 
 export default App;

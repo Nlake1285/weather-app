@@ -1,28 +1,48 @@
-import { useState } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import { useEffect, useState } from "react";
 import { getWeather } from "../api";
+import WeatherCard from "../components/WeatherCard";
+import { db } from "../firebase";
 
 function Home() {
 
   const [weather, setWeather] = useState(null);
+  const [city, setCity] = useState("");
 
-  async function loadWeather() {
-    const data = await getWeather(46.8721, -113.9940);
+  useEffect(() => {
+    loadSavedLocation();
+  }, []);
+
+  async function loadSavedLocation() {
+
+    const snapshot = await getDocs(collection(db, "locations"));
+
+    if (snapshot.empty) return;
+
+    const saved = snapshot.docs[0].data();
+
+    setCity(saved.city);
+
+    const data = await getWeather(
+      saved.latitude,
+      saved.longitude
+    );
+
     setWeather(data.current_weather);
   }
 
   return (
-    <div>
-      <h2>Home</h2>
+    <div style={{ textAlign: "center", marginTop: "40px" }}>
 
-      <button onClick={loadWeather}>
-        Load Weather
-      </button>
+      <h1>Weather App</h1>
 
-      {weather && (
-        <div>
-          <p>Temperature: {weather.temperature}°C</p>
-          <p>Wind Speed: {weather.windspeed} km/h</p>
-        </div>
+      {weather ? (
+        <WeatherCard
+          city={city}
+          weather={weather}
+        />
+      ) : (
+        <p>No saved location yet.</p>
       )}
 
     </div>
