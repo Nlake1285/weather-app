@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, getDocs } from "firebase/firestore";
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { useState } from "react";
 import { getCoordinates } from "../api";
 import { db } from "../firebase";
@@ -7,31 +7,37 @@ function Location() {
 
   const [city, setCity] = useState("");
 
-  async function saveLocation() {
+async function saveLocation() {
 
-    const coords = await getCoordinates(city);
+  const coords = await getCoordinates(city);
 
-    if (!coords) {
-      alert("City not found");
-      return;
-    }
+  if (!coords) {
+    alert("City not found");
+    return;
+  }
 
-    // delete old saved locations
-    const snapshot = await getDocs(collection(db, "locations"));
+  const userId = "demoUser";
 
-    for (const doc of snapshot.docs) {
-      await deleteDoc(doc.ref);
-    }
+  // Ensure user document exists
+  await setDoc(
+    doc(db, "users", userId),
+    { username: userId },
+    { merge: true }
+  );
 
-    // save new one
-    await addDoc(collection(db, "locations"), {
+  // Add location to subcollection
+  await addDoc(
+    collection(db, "users", userId, "locations"),
+    {
       city: coords.name,
       latitude: coords.latitude,
-      longitude: coords.longitude
-    });
+      longitude: coords.longitude,
+      createdAt: new Date()
+    }
+  );
 
-    alert("Location saved!");
-  }
+  alert("Location saved!");
+}
 
   return (
     <div className="container">

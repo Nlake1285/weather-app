@@ -1,11 +1,11 @@
-import { Link, Route, Routes } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
 import Home from "./pages/Home";
 import Location from "./pages/Location";
 
 function App() {
 
   return (
-    <div className="nav-links" style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+    <div>
 
       <nav style={styles.nav}>
 
@@ -44,9 +44,7 @@ const styles = {
     alignItems: "center",
     padding: "15px 25px",
     background: "#0f172a",
-    color: "white",
-    width: "100%",
-    boxSizing: "border-box"
+    color: "white"
   },
 
   link: {
