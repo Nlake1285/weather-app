@@ -28,7 +28,37 @@ function Home() {
   async function loadWeatherForCity(location) {
     const data = await getWeather(location.latitude, location.longitude);
     setCity(location.city);
-    setWeather(data.current_weather);
+
+    // Find the index in hourly data that matches the current time
+    const now = data.current_weather.time;
+    const hIdx = data.hourly.time.findIndex(t => t === now);
+
+    // Get daily sunrise/sunset for today
+    let sunrise = null, sunset = null;
+    if (data.daily && data.daily.sunrise && data.daily.sunset) {
+      // Find the daily index for today
+      const today = now.split('T')[0];
+      const dIdx = data.daily.time.findIndex(t => t === today);
+      if (dIdx !== -1) {
+        sunrise = data.daily.sunrise[dIdx];
+        sunset = data.daily.sunset[dIdx];
+      }
+    }
+
+    // Compose weather object for WeatherCard
+    setWeather({
+      ...data.current_weather,
+      humidity: hIdx !== -1 ? data.hourly.relative_humidity_2m[hIdx] : undefined,
+      apparent_temperature: hIdx !== -1 ? data.hourly.apparent_temperature[hIdx] : undefined,
+      pressure: hIdx !== -1 ? data.hourly.pressure_msl[hIdx] : undefined,
+      cloudcover: hIdx !== -1 ? data.hourly.cloudcover[hIdx] : undefined,
+      precipitation: hIdx !== -1 ? data.hourly.precipitation[hIdx] : undefined,
+      uv_index: hIdx !== -1 ? data.hourly.uv_index[hIdx] : undefined,
+      visibility: hIdx !== -1 ? data.hourly.visibility[hIdx] : undefined,
+      dewpoint: hIdx !== -1 ? data.hourly.dewpoint_2m[hIdx] : undefined,
+      sunrise,
+      sunset
+    });
   }
 
   async function deleteLocation(id) {
