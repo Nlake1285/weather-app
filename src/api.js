@@ -1,6 +1,10 @@
 export async function getWeather(latitude, longitude) {
   const url =
-    `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`;
+    `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}` +
+    `&current_weather=true` +
+    `&hourly=relative_humidity_2m,apparent_temperature,pressure_msl,cloudcover,precipitation,weathercode,uv_index,visibility,dewpoint_2m` +
+    `&daily=sunrise,sunset` +
+    `&timezone=auto`;
 
   const response = await fetch(url);
   const data = await response.json();

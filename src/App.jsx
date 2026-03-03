@@ -1,43 +1,44 @@
-import { Routes, Route, Link } from "react-router-dom";
+import { Link, Route, Routes } from "react-router-dom";
+import { useAuth } from "./context/AuthContext";
 import Home from "./pages/Home";
 import Location from "./pages/Location";
+import Login from "./pages/Login";
+import Logout from "./pages/Logout";
 
 function App() {
+  const { user } = useAuth();
 
   return (
     <div>
-
       <nav style={styles.nav}>
-
         <h2>Weather App</h2>
 
-        <div>
-          <Link to="/" style={styles.link}>Home</Link>
-          <Link to="/location" style={styles.link}>Change Location</Link>
-        </div>
-
+        {user && (
+          <div>
+            <p>Click the nav links to begin!</p>
+            <Link to="/" style={styles.link}>Home</Link>
+            <Link to="/location" style={styles.link}>Add Location</Link>
+            <Link to="/logout" style={styles.link}>Log Out</Link>
+          </div>
+        )}
       </nav>
 
       <Routes>
-
-        <Route
-          path="/"
-          element={<Home />}
-        />
-
-        <Route
-          path="/location"
-          element={<Location />}
-        />
-
+        {!user ? (
+          <Route path="*" element={<Login />} />
+        ) : (
+          [
+            <Route key="home" path="/" element={<Home />} />, 
+            <Route key="location" path="/location" element={<Location />} />, 
+            <Route key="logout" path="/logout" element={<Logout />} />
+          ]
+        )}
       </Routes>
-
     </div>
   );
 }
 
 const styles = {
-
   nav: {
     display: "flex",
     justifyContent: "space-between",
@@ -46,14 +47,12 @@ const styles = {
     background: "#0f172a",
     color: "white"
   },
-
   link: {
     color: "white",
     marginLeft: "15px",
     textDecoration: "none",
     fontWeight: "bold"
   }
-
 };
 
 export default App;
