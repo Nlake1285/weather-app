@@ -13,9 +13,10 @@ function App() {
       <nav style={styles.nav}>
         <h2>Weather App</h2>
 
+        <p>Welcome to the Weather App! Click the nav links to begin!</p>
+
         {user && (
           <div>
-            <p>Click the nav links to begin!</p>
             <Link to="/" style={styles.link}>Home</Link>
             <Link to="/location" style={styles.link}>Add Location</Link>
             <Link to="/logout" style={styles.link}>Log Out</Link>
